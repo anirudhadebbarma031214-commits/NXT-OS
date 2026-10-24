@@ -1,0 +1,1 @@
+using System.Windows; namespace NXT.Desktop; public partial class App : Application { }
