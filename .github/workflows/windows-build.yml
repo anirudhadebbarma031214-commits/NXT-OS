@@ -1,0 +1,22 @@
+name: Build NXT-OS Windows
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish WPF
+        run: dotnet publish src/NXT.Desktop/NXT.Desktop.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+      - name: Build installer
+        shell: pwsh
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\NXT-OS.iss'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NXT-OS-Windows-Installer
+          path: dist/NXT-OS-Setup.exe
